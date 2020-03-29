@@ -3,9 +3,9 @@
 ### Screenshots
 
 - Where no path exists
-![Screenshot 1](Screenshot%202020-03-29%20at%2013.55.59.png)
+![Screenshot 1](Screenshot%202020-03-29%20at%2017.35.01.png)
 - Where a path exists
-![Screenshot 2](Screenshot%202020-03-29%20at%2013.55.40.png)
+![Screenshot 2](Screenshot%202020-03-29%20at%2017.37.27.png)
 
 #### TODO
 

@@ -1,16 +1,37 @@
 'use strict';
 
-var canvas = document.getElementById("canvas");
+function draw(){
+   var canvas = document.getElementById("canvas");
+   var ctx = canvas.getContext('2d');
+   var thickness = 1;
+   var scale = thickness;
+   ctx.lineWidth = thickness;
+   ctx.strokeStyle = "#f84343";
+   ctx.fillStyle = "#e84343";
+   for(let i = 0; i < cells; i++){
+   for(let j = 0; j < cells; j++){
+       if(matrix[i][j].token === 0){
+          if(matrix[i][j].visited){
+             ctx.fillStyle = "green";
+             ctx.fillRect(width * i, height * j, width, height);
+          } else{
+                ctx.strokeRect(width * i, height * j, width, height);
+          }
+       } else if(matrix[i][j].token === 1){
+          ctx.fillStyle = "#e84343";
+          ctx.fillRect(width * i, height * j, width, height);
+       } else if(matrix[i][j].token === 2){
+          ctx.fillStyle = "#5c5";
+          ctx.fillRect(width * i, height * j, width, height);
+       } else if(matrix[i][j].token === 3){
+          ctx.fillStyle = "#345";
+          ctx.fillRect(width * i, height * j, width, height);
+       }
 
-var ctx = canvas.getContext('2d');
-var thickness = 1;
-var scale = thickness;
-ctx.lineWidth = thickness;
+   }
+}
+}
 
-// Wall
-
-ctx.strokeStyle = "#f84343";
-ctx.fillStyle = "#e84343";
 
 var cells = 50;
 let matrix = new Array(cells);
@@ -92,7 +113,7 @@ Queue.prototype.isEmpty = function() {
 
 for(let i = 0; i < cells; i++){
    for(let j = 0; j < cells; j++){
-       let token = (Math.random() < 0.3000000000) ? 1 : 0;
+       let token = (Math.random() < 0.4000000000) ? 1 : 0;
        matrix[i][j] = new Cell(Number(i), Number(j), token);
        if(matrix[i][j].token === 1){
           matrix[i][j].block();
@@ -160,26 +181,6 @@ while(target !== undefined){
    target = target.parent;
 }
 
-console.log(matrix);
-for(let i = 0; i < cells; i++){
-   for(let j = 0; j < cells; j++){
-       if(matrix[i][j].token === 0){
-          if(matrix[i][j].visited){
-             ctx.fillStyle = "green";
-             ctx.fillRect(width * i, height * j, width, height);
-          } else{
-                ctx.strokeRect(width * i, height * j, width, height);
-          }
-       } else if(matrix[i][j].token === 1){
-          ctx.fillStyle = "#e84343";
-          ctx.fillRect(width * i, height * j, width, height);
-       } else if(matrix[i][j].token === 2){
-          ctx.fillStyle = "#5c5";
-          ctx.fillRect(width * i, height * j, width, height);
-       } else if(matrix[i][j].token === 3){
-          ctx.fillStyle = "#345";
-          ctx.fillRect(width * i, height * j, width, height);
-       }
 
-   }
-}
+draw();
+
