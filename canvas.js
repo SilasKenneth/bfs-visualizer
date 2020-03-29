@@ -12,8 +12,7 @@ ctx.lineWidth = thickness;
 ctx.strokeStyle = "#f84343";
 ctx.fillStyle = "#e84343";
 
-var cells = 20;
-var cells2 = cells + 1;
+var cells = 50;
 let matrix = new Array(cells);
 for(let i = 0; i < cells; i++){
    matrix[i] = new Array(cells);
@@ -32,18 +31,26 @@ function Cell(x, y, token){
 
 Cell.prototype.addNeighbours = function(){
      if(Number(this.x - 1) >= 0){
-         this.neighbours.push(matrix[Number(this.x - 1)][this.y]);
+         if(!matrix[this.x - 1][this.y].blocked){
+            this.neighbours.push(matrix[Number(this.x - 1)][this.y]);
+         }
      }
 
      if(Number(this.x + 1) < cells){
-         this.neighbours.push(matrix[this.x + 1][this.y]);
+         if(!matrix[this.x + 1][this.y].blocked){
+             this.neighbours.push(matrix[this.x + 1][this.y]);
+         }
      }
 
      if(Number(this.y - 1) >= 0){
-         this.neighbours.push(matrix[this.x][Number(this.y - 1)]);
+        if(!matrix[this.x][this.y - 1].blocked){
+            this.neighbours.push(matrix[this.x][Number(this.y - 1)]);
+         }
      }
      if(Number(this.y + 1) < cells){
-         this.neighbours.push(matrix[this.x][this.y + 1]);
+        if(!matrix[this.x][this.y + 1].blocked){
+           this.neighbours.push(matrix[this.x][this.y + 1]);
+        }
      }
 }
 
@@ -75,7 +82,6 @@ Queue.prototype.deque = function(){
    }
    ++this.topIndex;
    --this.currentSize;
-   console.log(this.topIndex);
    return this.data[this.topIndex];
 }
 
@@ -94,6 +100,7 @@ for(let i = 0; i < cells; i++){
    }
 }
 
+matrix[cells - 1][cells - 1].blocked = false;
 for(let i = 0; i < cells; i++){
    for(let j = 0; j < cells; j++){
       matrix[i][j].addNeighbours();
@@ -101,8 +108,8 @@ for(let i = 0; i < cells; i++){
 }
 
 // End of Structures
-var width = 20
-var height = 20
+var width = 10
+var height = 10
 
 var pathFound = false;
 matrix[matrix.length - 1][matrix[0].length - 1].token = 2;
@@ -114,16 +121,12 @@ var bfs = function(start){
    start.blocked = false;
    Q.enqueue(start);
    var visitedNodes = new Array();
-   let loops = 1505;
-   console.log(Q, 'Queue.....');
    while(!Q.isEmpty()){
-       if(loops === 0) break;
        var top = Q.deque();
        if(top === undefined){
-          console.log("CRAP!!!!!!", loops, Q);
+//          console.log("CRAP!!!!!!", loops, Q);
           break;
        }
-       console.info('Working....' ,top)
        top.visited = true;
        visitedNodes.push(top);
        if(top.token === 2){
@@ -134,30 +137,47 @@ var bfs = function(start){
           if((!neighbour.visited) && (!neighbour.blocked)){
                Q.enqueue(neighbour);
                neighbour.parent = top;
+               neighbour.visited = true;
           }
        }
-       loops--;
+       //loops--;
    }
    console.log(Q);
    console.log(visitedNodes);
 }
+
 bfs(matrix[0][0]);
+
+var target = matrix[matrix.length - 1][matrix[0].length - 1];
+
+
+while(target !== undefined){
+   if(target.x === 0 && target.y === 0){
+      target.token = 3;
+      break;
+   }
+   target.token = 3;
+   target = target.parent;
+}
 
 console.log(matrix);
 for(let i = 0; i < cells; i++){
    for(let j = 0; j < cells; j++){
-       if(!matrix[i][j].blocked){
+       if(matrix[i][j].token === 0){
           if(matrix[i][j].visited){
              ctx.fillStyle = "green";
              ctx.fillRect(width * i, height * j, width, height);
           } else{
-             ctx.strokeRect(width * i, height * j, width, height);
-             }
+                ctx.strokeRect(width * i, height * j, width, height);
+          }
        } else if(matrix[i][j].token === 1){
           ctx.fillStyle = "#e84343";
           ctx.fillRect(width * i, height * j, width, height);
-       } else{
+       } else if(matrix[i][j].token === 2){
           ctx.fillStyle = "#5c5";
+          ctx.fillRect(width * i, height * j, width, height);
+       } else if(matrix[i][j].token === 3){
+          ctx.fillStyle = "#345";
           ctx.fillRect(width * i, height * j, width, height);
        }
 
